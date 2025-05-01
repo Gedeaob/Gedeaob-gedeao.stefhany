@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gedeão & Stefhany - Datas de Nascimento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #030637, #3C0753, #720455, #910A67);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .person {
+            margin: 30px 0;
+        }
+
+        .person h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .person p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .time-counter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+        }
+
+        .time-box {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .time-box div:first-child {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .time-box div:last-child {
+            font-size: 1rem;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #fff;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            z-index: 2000;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='../index.html'">Voltar</button>
+    <div class="container">
+        <div class="person" id="gedeon">
+            <h2>Gedeão Batista</h2>
+            <p>Data de Nascimento: 25/03/1999</p>
+            <div class="time-counter" id="gedeonCounter"></div>
+        </div>
+        <div class="person" id="stefhany">
+            <h2>Stefhany Mendonça</h2>
+            <p>Data de Nascimento: 06/09/1997</p>
+            <div class="time-counter" id="stefhanyCounter"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateCounter(birthDate, counterId) {
+            const startDate = new Date(birthDate);
+            const now = new Date();
+
+            let years = now.getFullYear() - startDate.getFullYear();
+            let months = now.getMonth() - startDate.getMonth();
+            let days = now.getDate() - startDate.getDate();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            if (days < 0) {
+                months -= 1;
+                days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            }
+            if (months < 0) {
+                years -= 1;
+                months += 12;
+            }
+
+            const totalDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+
+            document.getElementById(counterId).innerHTML = `
+                <div class="time-box"><div>${years}</div><div>Anos</div></div>
+                <div class="time-box"><div>${months}</div><div>Meses</div></div>
+                <div class="time-box"><div>${days}</div><div>Dias</div></div>
+                <div class="time-box"><div>${hours}</div><div>Horas</div></div>
+                <div class="time-box"><div>${minutes}</div><div>Minutos</div></div>
+                <div class="time-box"><div>${seconds}</div><div>Segundos</div></div>
+                <div class="time-box" style="grid-column: span 3;"><div>${totalDays}</div><div>Dias Vividos</div></div>
+            `;
+        }
+
+        function updateAllCounters() {
+            updateCounter('1999-03-25', 'gedeonCounter');
+            updateCounter('1997-09-06', 'stefhanyCounter');
+        }
+
+        setInterval(updateAllCounters, 1000);
+        updateAllCounters();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('../service-worker.js')
+                .then(() => console.log('Service Worker registrado'))
+                .catch(err => console.error('Erro ao registrar Service Worker:', err));
+        }
+    </script>
+</body>
+</html>

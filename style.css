@@ -1,0 +1,182 @@
+.music-player-container {
+    max-width: 371px;
+    margin: 20px auto;
+    padding: 0 5px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 100;
+    box-shadow: 0px 0px 70px 0px rgba(255, 255, 255, 0.5);
+    background: #720455;
+    overflow: hidden;
+}
+
+.card .current-song {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0px;
+    border-radius: 20px;
+    color: #720455;
+    background: #fff;
+}
+
+.card .current-song audio {
+    display: none;
+}
+
+.card .current-song .img-wrap {
+    position: relative;
+    margin: 0 auto;
+    width: 270px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px 0px rgba(245, 241, 0, 0.7);
+}
+
+.card .current-song .img-wrap img {
+    width: auto;
+    height: 100%;
+}
+
+.card .current-song .song-name {
+    margin-top: 30px;
+    font-size: 22px;
+    font-family: 'Dancing Script', cursive;
+}
+
+.card .current-song .song-autor {
+    color: #f8a5c2;
+    font-family: 'Annie Use Your Telescope', cursive;
+}
+
+.card .current-song .time {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    width: 240px;
+}
+
+.card .current-song #timeline {
+    position: relative;
+    margin: 10px auto;
+    width: 240px;
+    height: 5px;
+    background: #f8a5c2;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card .current-song #timeline #playhead {
+    position: relative;
+    z-index: 2;
+    width: 0;
+    height: 5px;
+    border-radius: 5px;
+    background: #720455;
+}
+
+.card .current-song .controls {
+    margin-top: 10px;
+}
+
+.card .current-song .controls button {
+    color: #720455;
+    border-radius: 50%;
+    margin: 15px;
+    font-size: 18px;
+    text-align: center;
+    transition: 0.2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.card .current-song .controls button.play {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #e2e2e2;
+}
+
+.card .current-song .controls button.play:hover {
+    box-shadow: 0px 0px 15px 0px rgba(114, 4, 85, 0.7);
+}
+
+.card .current-song .controls button.prev-next {
+    width: 35px;
+    height: 35px;
+}
+
+.card .current-song .controls button.prev-next:hover {
+    transform: scale(1.2);
+}
+
+.card .play-list {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    height: 180px;
+    overflow-y: scroll;
+}
+
+.card .play-list .track {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.card .play-list .track:hover,
+.card .play-list .track.active {
+    background: #910A67;
+    border-color: #910A67;
+}
+
+.card .play-list .track .track-img {
+    width: 90px;
+    border-radius: 10px;
+}
+
+.card .play-list .track .track-discr {
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+    min-width: 190px;
+}
+
+.card .play-list .track .track-discr .track-name {
+    font-size: 17px;
+    margin-top: 8px;
+    font-family: 'Dancing Script', cursive;
+}
+
+.card .play-list .track .track-discr .track-author {
+    margin-top: 8px;
+    font-weight: 300;
+    color: #f8a5c2;
+    font-family: 'Annie Use Your Telescope', cursive;
+}
+
+.play-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.play-list::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 5px;
+}
+
+.play-list::-webkit-scrollbar-track {
+    background: #720455;
+}

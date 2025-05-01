@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosso Calendário</title>
+  <!-- Fontes Personalizadas -->
+  <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+AU+SA:wght@100..400&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS (Development CDN, replace for production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Winky Rough', sans-serif;
+      background: linear-gradient(135deg, #4635B1, #B771E5, #AEEA94, #FFFBCA);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Barra de Navegação */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+    }
+
+    .nav-title {
+      font-family: 'Playwrite AU SA', cursive;
+      font-size: 1.75rem;
+      text-align: center;
+      flex-grow: 1;
+      cursor: pointer;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-menu ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0 10px;
+    }
+
+    .nav-menu li {
+      margin: 0 12px;
+    }
+
+    .nav-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    .nav-menu a:hover {
+      color: #AEEA94;
+    }
+
+    .home-icon {
+      display: block;
+      padding: 5px;
+      margin-left: 15px;
+    }
+
+    .home-icon svg {
+      fill: #F19E39;
+      width: 28px;
+      height: 28px;
+    }
+
+    /* Hamburger Menu */
+    .navigation-main > .input {
+      display: none;
+      visibility: hidden;
+      z-index: -999;
+    }
+
+    .navigation-main > .label {
+      width: 50px;
+      height: 40px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .navigation-main .span {
+      width: 40px;
+      height: 2px;
+      background-color: #F19E39;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .navigation-main .span::before,
+    .navigation-main .span::after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 40px;
+      height: 2px;
+      background-color: #F19E39;
+      transform-origin: center center;
+      transition: all 400ms linear;
+    }
+
+    .navigation-main .span::before {
+      bottom: 8px;
+    }
+
+    .navigation-main .span::after {
+      top: 8px;
+    }
+
+    .input:checked ~ .label .span {
+      background-color: transparent;
+    }
+
+    .input:checked ~ .label .span::before {
+      transform: rotate(135deg);
+      bottom: 0;
+    }
+
+    .input:checked ~ .label .span::after {
+      transform: rotate(-135deg);
+      top: 0;
+    }
+
+    .menu-nav {
+      background: rgba(0, 0, 0, 0.9);
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      transition: transform 600ms ease;
+      transform: translateY(-100%);
+      opacity: 0;
+      z-index: 1000;
+    }
+
+    .input:checked ~ .menu-nav {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .menu-nav.show {
+      display: flex;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .menu-nav > .list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .menu-nav .item {
+      padding: 15px;
+      text-align: center;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .menu-nav .link {
+      color: #fff;
+      font-size: 8vh;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .menu-nav .link:hover {
+      color: #AEEA94;
+    }
+
+    /* Menu Mobile */
+    @media (max-width: 768px) {
+      .nav-menu ul {
+        display: none;
+      }
+
+      .nav-menu.active ul {
+        display: flex;
+      }
+
+      .nav-menu li {
+        margin: 12px 0;
+      }
+
+      nav {
+        padding: 6px 12px;
+      }
+
+      .nav-title {
+        font-size: 1.5rem;
+      }
+
+      .menu-nav .link {
+        font-size: 4vh;
+      }
+    }
+
+    /* Modal Personalizado */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+      max-width: 450px;
+      width: 90%;
+      color: #fff;
+      text-align: center;
+    }
+
+    .modal-content.vintage {
+      background: #f4e4bc;
+      color: #333;
+      font-family: 'Courier New', monospace;
+      border: 3px solid #8b4513;
+    }
+
+    .modal-content input, .modal-content select {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 16px;
+      touch-action: manipulation;
+    }
+
+    /* Estilizar opções do dropdown para melhor visibilidade */
+    .modal-content select option {
+      color: #000; /* Texto preto para opções */
+      background: #fff; /* Fundo branco para opções */
+    }
+
+    .modal-content select:focus option:checked {
+      background: #B771E5; /* Fundo roxo quando selecionado */
+      color: #fff; /* Texto branco quando selecionado */
+    }
+
+    .modal-content button {
+      background: #B771E5;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: 8px;
+      touch-action: manipulation;
+    }
+
+    .modal-content button:hover {
+      background: #AEEA94;
+      color: #000;
+    }
+
+    /* Contador e Seções */
+    .countdown {
+      text-align: center;
+      font-size: 22px;
+      margin: 100px auto 40px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px;
+      border-radius: 12px;
+      width: fit-content;
+      position: relative;
+      z-index: 10;
+    }
+
+    .neon-blue { color: #00f0ff; text-shadow: 0 0 12px #00f0ff; }
+    .neon-orange { color: #ff9500; text-shadow: 0 0 12px #ff9500; }
+    .neon-red { color: #ff0000; text-shadow: 0 0 12px #ff0000; }
+    .neon-green { color: #00ff00; text-shadow: 0 0 12px #00ff00; }
+    .neon-pink { color: #ff00ff; text-shadow: 0 0 12px #ff00ff; }
+    .neon-gray { color: #cccccc; text-shadow: 0 0 12px #cccccc; }
+
+    .calendar-container, .challenges, .cronograma, .encontros, .color-legend {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      min-height: 250px;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    #month-year {
+      flex-grow: 1;
+      text-align: center;
+      font-size: 1.75rem;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .calendar-day {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      font-size: 18px;
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .calendar-day:hover {
+      background: #AEEA94;
+      color: #000;
+    }
+
+    .calendar-day.selected {
+      background: #B771E5;
+      transform: scale(1.1);
+      animation: pop 0.3s ease;
+    }
+
+    .calendar-day.has-legend {
+      background: #AEEA94;
+      color: #000;
+    }
+
+    .calendar-day.has-meeting::after {
+      content: '❤️';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 14px;
+    }
+
+    .calendar-day.holiday { background: #ff9500; color: #000; }
+    .calendar-day.commemorative { background: #00f0ff; color: #000; }
+    .calendar-day.optional { background: #00ff00; color: #000; }
+    .calendar-day.valentines { background: #ff00ff; color: #000; }
+    .calendar-day.christmas { background: #ff0000; color: #000; }
+    .calendar-day.new-year-eve { background: #cccccc; color: #000; }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1.1); }
+    }
+
+    /* Legenda de Cores */
+    .color-legend ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .color-legend li {
+      margin: 10px 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .color-legend .color-box {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      border-radius: 4px;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Botões Animados */
+    .animated-btn {
+      background: #B771E5;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+      touch-action: manipulation;
+    }
+
+    .animated-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #B771E5;
+    }
+
+    .animated-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .animated-btn:hover::after {
+      left: 100%;
+    }
+
+    /* Layout Mobile */
+    @media (max-width: 768px) {
+      .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+
+      .calendar-day {
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      .calendar-day.has-meeting::after {
+        font-size: 12px;
+        top: 1px;
+        right: 1px;
+      }
+
+      .countdown {
+        font-size: 18px;
+        width: 90%;
+        margin: 80px auto 20px;
+      }
+
+      .calendar-container, .challenges, .cronograma, .encontros, .color-legend {
+        margin: 20px 15px;
+        padding: 20px;
+      }
+
+      .nav-title {
+        font-size: 1.25rem;
+      }
+
+      #month-year {
+        font-size: 1.25rem;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 15px;
+      }
+
+      .modal-content input, .modal-content select {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .modal-content button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .color-legend li {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra de Navegação -->
+  <nav>
+    <a href="../index.html" class="home-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 0 24 24" width="28px" fill="#F19E39">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+    <h1 class="nav-title" id="scroll-to-top">Nosso Calendário</h1>
+    <div class="nav-menu">
+      <div class="navigation-main">
+        <input class="input" type="checkbox" id="menuToggle">
+        <label class="label" for="menuToggle">
+          <span class="span"></span>
+        </label>
+        <nav class="menu-nav">
+          <ul class="list">
+            <li class="item"><a class="link" href="#" id="add-legend-link">Adicionar Legenda</a></li>
+            <li class="item"><a class="link" href="#" id="select-days-link">Selecionar Dias</a></li>
+            <li class="item"><a class="link" href="#" id="set-date-link">Definir Encontro</a></li>
+            <li class="item"><a class="link" href="#" id="share-link">Compartilhar</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contador Regressivo -->
+  <div class="countdown" id="countdown">Próximo encontro em: -- dias, -- horas, -- minutos, -- segundos</div>
+
+  <!-- Calendário -->
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <button class="animated-btn" id="prev-month">Anterior</button>
+      <h2 id="month-year"></h2>
+      <button class="animated-btn" id="next-month">Próximo</button>
+    </div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+  </div>
+
+  <!-- Nosso Cronograma -->
+  <div class="cronograma">
+    <h2 class="text-2xl mb-4">Nosso Cronograma</h2>
+    <button class="animated-btn" id="add-cronograma">Adicionar Cronograma</button>
+    <div id="cronograma-list" class="mt-4"></div>
+  </div>
+
+  <!-- Desafios Mensais -->
+  <div class="challenges">
+    <h2 class="text-2xl mb-4">Desafios Mensais</h2>
+    <button class="animated-btn" id="add-challenge">Adicionar Desafio</button>
+    <button class="animated-btn" id="delete-challenge">Excluir Desafio</button>
+    <div id="challenge-list" class="mt-4"></div>
+  </div>
+
+  <!-- Encontros -->
+  <div class="encontros">
+    <h2 class="text-2xl mb-4">Encontros</h2>
+    <button class="animated-btn" id="add-encontro">Adicionar Encontro</button>
+    <div id="encontro-list" class="mt-4"></div>
+  </div>
+
+  <!-- Legenda de Cores -->
+  <div class="color-legend">
+    <h2 class="text-2xl mb-4">Legenda de Cores</h2>
+    <ul>
+      <li><span class="color-box" style="background: #ff9500;"></span>Feriados: Laranja</li>
+      <li><span class="color-box" style="background: #00f0ff;"></span>Datas Comemorativas: Azul</li>
+      <li><span class="color-box" style="background: #00ff00;"></span>Pontos Facultativos: Verde</li>
+      <li><span class="color-box" style="background: #ff00ff;"></span>Dia dos Namorados: Rosa</li>
+      <li><span class="color-box" style="background: #ff0000;"></span>Dias 24 e 25 de Dezembro: Vermelho</li>
+      <li><span class="color-box" style="background: #cccccc;"></span>Dia 31 de Dezembro: Cinza</li>
+    </ul>
+  </div>
+
+  <!-- Modal Personalizado -->
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modal-content">
+      <h2 id="modal-title" class="text-xl mb-4"></h2>
+      <div id="modal-body"></div>
+      <button id="close-modal">Fechar</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
