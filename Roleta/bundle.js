@@ -2340,20 +2340,25 @@ let restaurants = null
 let wheelName = wheelNameEl.textContent
 
 const defaultRestaurants = [
-    'Um dia\nde mimos', 
-    'Presente\nsurpresa', 
-    'Passeio\nsurpresa', 
-    'Vale um\ndesejo', 
-    'Perdeu\na vez', 
-    'Vale um\nfavor', 
-    'Vale um\npedido', 
-    'Carinho\nespecial'
+    'Comédia\nromântica',
+    'Ação', 
+    'Aventura', 
+    'Comédia', 
+    'Drama', 
+    'Comédia\nde terror',
+    'Terror', 
+    'Fantasia',
+    'Filmes\nde guerra',
+    'Romance', 
+    'Animação', 
+    'Ficção\nCientífica',
+    'Perdeu\na vez' 
   ];
 const localStorageKeySegments = 'lunchwheel:segments'
 const localStorageKeyWheelName = 'lunchwheel:name'
 
 const colors = [
-  '#86131C', '#D9AE62', '#86131C', '#D9AE62', '#FF0000', '#D9AE62', '#86131C', '#D9AE62'
+  '#86131C', '#D9AE62', '#86131C', '#D9AE62', '#D9AE62', '#86131C', '#D9AE62', '#86131C', '#D9AE62', '#86131C', '#D9AE62', '#D9AE62', '#FF0000'
 ]
 
 window.lunchWheel = {
